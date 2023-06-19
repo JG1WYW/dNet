@@ -1,0 +1,46 @@
+
+DEFINITION MODULE Manager;
+
+FROM SYSTEM IMPORT BYTE;
+FROM Processes IMPORT SIGNAL;
+FROM Type IMPORT MINIBUF;
+FROM Mcd IMPORT MAXDEVS;
+
+CONST
+  PORTS = MAXDEVS;	(* 最大ポート数 0=コンソール, 1～:mcd *)
+  CHANS = 9;		(* 最大チャンネル数 0-9 *)
+  BUFSIZE = 511;	(* DM の送受信バッファ *)
+  MAXBUFSIZE = 8192;	(* DM のバッファサイズの上限 *)
+
+TYPE
+  ID = RECORD
+    pid, cid: BYTE;
+  END;
+  DevLst = ( con, tty, aea, tas, tnc, mnp );
+  TableDEV = POINTER TO RECORD
+    active, link: BOOLEAN;
+    gfull, pfull, kick: BOOLEAN;
+    call: MINIBUF;
+    ghptr, gtptr: INTEGER;
+    phptr, ptptr: INTEGER;
+    bsize: INTEGER;
+    put, get: POINTER TO ARRAY [ 0..MAXBUFSIZE ] OF CHAR;
+  END;
+
+VAR
+  Ports: BYTE;
+  Heap: CARDINAL;
+  Did: ARRAY [ 0..PORTS ] OF DevLst;
+  DevStr: ARRAY DevLst OF MINIBUF;
+  Chans: ARRAY [ 0..PORTS ] OF BYTE;
+  Csign: ARRAY [ 0..PORTS ] OF SIGNAL;
+  StartUpBBS: PROCEDURE( ID );
+  InfoDEV: ARRAY [ 0..PORTS ],[ 0..CHANS ] OF TableDEV;
+  PortBufSize: ARRAY [ 0..PORTS ] OF CARDINAL;
+  Priority: ARRAY [ 0..PORTS ] OF CARDINAL;
+
+PROCEDURE PM;
+PROCEDURE SetEchoMode( pid:BYTE; echo:BOOLEAN );
+PROCEDURE GetEchoMode( pid:BYTE ): BOOLEAN;
+
+END Manager.

@@ -1,0 +1,32 @@
+
+DEFINITION MODULE BBS;
+
+FROM Type IMPORT LINEBUF, MINIBUF;
+FROM Manager IMPORT PORTS;
+
+CONST
+  ROOMS = 19;   (* ç≈ëÂÉãÅ[ÉÄêî *)
+
+TYPE
+  TableROOM = POINTER TO RECORD
+    RoomType: CARDINAL;
+    RoomName: MINIBUF;
+    RoomDir: LINEBUF;
+  END;
+
+VAR
+  Unit, ShortLimit, LongLimit, Delay, Rooms: CARDINAL;
+  PortType: ARRAY [ 0..PORTS ] OF CARDINAL;
+  InfoROOM: ARRAY [ 0..ROOMS+1 ] OF TableROOM;
+  EnvDNET, EnvNAME, EnvTMP, EnvUSR, EnvCALL: LINEBUF;
+  OpeningMessage: LINEBUF;
+
+PROCEDURE SetUpBBS;
+
+PROCEDURE MakeUSRdir( VAR buf: ARRAY OF CHAR; call: ARRAY OF CHAR );
+PROCEDURE MakeUSRfile( VAR buf: ARRAY OF CHAR; call, file: ARRAY OF CHAR );
+PROCEDURE MakeUSRmsg( VAR buf: ARRAY OF CHAR; call: ARRAY OF CHAR; number: CARDINAL );
+PROCEDURE MakeBBSfile( VAR buf: ARRAY OF CHAR; room, file: ARRAY OF CHAR; );
+PROCEDURE MakeBBSmsg( VAR buf: ARRAY OF CHAR; room: ARRAY OF CHAR; number: CARDINAL );
+
+END BBS.

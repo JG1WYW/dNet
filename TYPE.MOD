@@ -1,0 +1,4 @@
+
+IMPLEMENTATION MODULE Type;
+
+END Type.
